@@ -40,18 +40,16 @@ var graphqlHTTP = require("express-graphql");
 var schema_1 = require("./schema");
 var morgan = require("morgan");
 var db_1 = require("./db");
+var sensor_1 = require("./sensor");
+var models_1 = require("./models");
 // TODO: Setup serialport
-var AirQualityState;
-(function (AirQualityState) {
-    AirQualityState["UNKNOWN"] = "UNKNOWN";
-    AirQualityState["EXCELLENT"] = "EXCELLENT";
-    AirQualityState["GOOD"] = "GOOD";
-    AirQualityState["FAIR"] = "FAIR";
-    AirQualityState["INFERIOR"] = "INFERIOR";
-    AirQualityState["POOR"] = "POOR"; //5
-})(AirQualityState = exports.AirQualityState || (exports.AirQualityState = {}));
-var db = new db_1.AirQualityDatabase();
-db.insert(AirQualityState.POOR, 80, 150);
+var sensor = new sensor_1.AirQualitySensor();
+var db = new db_1.AirQualityDatabase("aq.db");
+sensor.on('data', function (data) {
+    db.insert(data.quality, data.pm2_5, data.pm10);
+});
+db.insert(models_1.AirQualityState.GOOD, 2, 3);
+sensor.generateData();
 var root = {
     airQuality: {
         quality: function () {

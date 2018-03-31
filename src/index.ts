@@ -4,20 +4,19 @@ import Schema from './schema';
 import { GraphQLError } from "graphql";
 import * as morgan from "morgan";
 import { AirQualityDatabase } from "./db";
+import { AirQualitySensor } from "./sensor";
+import { AirQuality, AirQualityState } from "./models";
 
 // TODO: Setup serialport
+const sensor = new AirQualitySensor();
+const db = new AirQualityDatabase("aq.db");
 
-export enum AirQualityState {
-  UNKNOWN = "UNKNOWN", //0,
-  EXCELLENT = "EXCELLENT", //1,
-  GOOD = "GOOD", //2,
-  FAIR = "FAIR", //3,
-  INFERIOR = "INFERIOR", //4,
-  POOR = "POOR" //5
-}
+sensor.on('data', (data: AirQuality) => {
+  db.insert(data.quality, data.pm2_5, data.pm10);
+});
 
-const db = new AirQualityDatabase();
-db.insert(AirQualityState.POOR, 80, 150);
+db.insert(AirQualityState.GOOD, 2, 3);
+sensor.generateData();
 
 const root = {
   airQuality: {

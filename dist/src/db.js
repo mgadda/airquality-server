@@ -35,22 +35,31 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-// Set up in-memory db
 var sqlite3 = require('sqlite3').verbose();
-var createSql = "CREATE TABLE airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  created_at integer(4) not null default (strftime('%s','now')) \n);";
-var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime')\nLIMIT 1;\n";
+var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  created_at integer(4) not null default (strftime('%s','now')) \n);";
+var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC\nLIMIT 1;\n";
 var insertSql = "\nINSERT INTO airquality (quality, pm2_5, pm10) values (?, ?, ?); \n";
 var AirQualityDatabase = /** @class */ (function () {
-    function AirQualityDatabase() {
-        this.db = new sqlite3.Database(':memory:');
-        this.db.run(createSql);
+    function AirQualityDatabase(filename) {
+        if (filename === void 0) { filename = ':memory:'; }
+        var _this = this;
+        this.db = new sqlite3.Database(filename);
+        this.db.serialize(function () { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.db.run(createSql);
+                this.stmt = this.db.prepare(insertSql);
+                return [2 /*return*/];
+            });
+        }); });
     }
     AirQualityDatabase.prototype.insert = function (quality, pm2_5, pm10) {
         var _this = this;
         this.db.serialize(function () {
-            var stmt = _this.db.prepare(insertSql);
-            stmt.run(quality, pm2_5, pm10);
-            stmt.finalize();
+            _this.stmt.run(quality, pm2_5, pm10, function (error) {
+                if (error) {
+                    console.log(error);
+                }
+            });
         });
     };
     AirQualityDatabase.prototype.getLatest = function () {
