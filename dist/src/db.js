@@ -36,9 +36,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var sqlite3 = require('sqlite3').verbose();
-var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  created_at integer(4) not null default (strftime('%s','now')) \n);";
+var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  pc0_3 INTEGER,\n  pc0_5 INTEGER,\n  pc1_0 INTEGER,\n  pc2_5 INTEGER,          \n  pc5_0 INTEGER,\n  pc10 INTEGER,\n  created_at integer(4) not null default (strftime('%s','now')) \n);";
 var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC\nLIMIT 1;\n";
-var insertSql = "\nINSERT INTO airquality (quality, pm2_5, pm10) values (?, ?, ?); \n";
+var insertSql = "\nINSERT INTO airquality \n  (quality, pm2_5, pm10, pc0_3, pc0_5, pc1_0, pc2_5, pc5_0, pc10) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); \n";
 var AirQualityDatabase = /** @class */ (function () {
     function AirQualityDatabase(filename) {
         if (filename === void 0) { filename = ':memory:'; }
@@ -52,10 +52,10 @@ var AirQualityDatabase = /** @class */ (function () {
             });
         }); });
     }
-    AirQualityDatabase.prototype.insert = function (quality, pm2_5, pm10) {
+    AirQualityDatabase.prototype.insert = function (airquality) {
         var _this = this;
         this.db.serialize(function () {
-            _this.stmt.run(quality, pm2_5, pm10, function (error) {
+            _this.stmt.run(airquality.quality, airquality.pm2_5, airquality.pm10, airquality.pc0_3, airquality.pc0_5, airquality.pc1_0, airquality.pc2_5, airquality.pc5_0, airquality.pc10, function (error) {
                 if (error) {
                     console.log(error);
                 }

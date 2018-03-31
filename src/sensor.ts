@@ -5,7 +5,7 @@ import { AirQualityState } from "./models";
 const TestSerialPort = require('serialport/test');
 
 export class AirQualitySensor extends EventEmitter {
-  port: typeof TestSerialPort
+  port: typeof TestSerialPort // change to SerialPort
 
   pm2_5ToQuality(pm2_5: number): AirQualityState {
     if (pm2_5 >= 0.0 && pm2_5 < 12.0) {
@@ -23,12 +23,15 @@ export class AirQualitySensor extends EventEmitter {
 
   constructor() {
     super();
-    // Create a port and enable the echo and recording.
+
+    // Create a mock port and enable the echo and recording.
     const MockBinding = TestSerialPort.Binding;
     MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
 
     this.port = new SerialPort('/dev/ROBOT');
-    // var port = new SerialPort('/dev/tty-usbserial1', {
+
+    // Replace the above with just:
+    // var port = new SerialPort('/dev/cu.Bluetooth-Incoming-Port', {
     //   baudRate: 9600
     // });
 
@@ -41,9 +44,15 @@ export class AirQualitySensor extends EventEmitter {
         this.emit('data', {
           pm2_5: raw.pm2_5,
           pm10: raw.pm10,
+          pc0_3: raw.pc0_3,
+          pc0_5: raw.pc0_5,
+          pc1_0: raw.pc1_0,
+          pc2_5: raw.pc2_5,
+          pc5_0: raw.pc5_0,
+          pc10: raw.pc10,
           quality: this.pm2_5ToQuality(raw.pm2_5)
         });
-      } catch {        
+      } catch {
       }
     });
 
@@ -73,17 +82,7 @@ export class AirQualitySensor extends EventEmitter {
         pm2_5 -= 1;
         pm10 -= 1;
       }
-      
+
     }, 1000);
   }
 }
-
-
-
-
-
-
-
-// (function wait () {
-//   if (true) setTimeout(wait, 1000);
-// })();

@@ -1,5 +1,5 @@
 {
-  "name": "aqbot-server",
+  "name": "airquality-server",
   "version": "0.1.0",
   "description": "Reads arduino data from serial port and serves that data via GraphQL",
   "main": "dist/src/index.js",

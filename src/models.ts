@@ -2,6 +2,12 @@ export interface AirQuality {
   quality: AirQualityState;
   pm2_5: number;
   pm10: number;
+  pc0_3?: number;
+  pc0_5?: number;
+  pc1_0?: number;
+  pc2_5?: number;
+  pc5_0?: number;
+  pc10?: number;  
 }
 
 export enum AirQualityState {

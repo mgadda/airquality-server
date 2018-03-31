@@ -11,12 +11,12 @@ import { AirQuality, AirQualityState } from "./models";
 const sensor = new AirQualitySensor();
 const db = new AirQualityDatabase("aq.db");
 
-sensor.on('data', (data: AirQuality) => {
-  db.insert(data.quality, data.pm2_5, data.pm10);
+sensor.on('data', (airQuality: AirQuality) => {
+  db.insert(airQuality);
 });
 
-db.insert(AirQualityState.GOOD, 2, 3);
-sensor.generateData();
+// db.insert({ quality: AirQualityState.GOOD, pm2_5: 1, pm10: 1 });
+// sensor.generateData();
 
 const root = {
   airQuality: {

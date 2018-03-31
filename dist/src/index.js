@@ -41,15 +41,14 @@ var schema_1 = require("./schema");
 var morgan = require("morgan");
 var db_1 = require("./db");
 var sensor_1 = require("./sensor");
-var models_1 = require("./models");
 // TODO: Setup serialport
 var sensor = new sensor_1.AirQualitySensor();
 var db = new db_1.AirQualityDatabase("aq.db");
-sensor.on('data', function (data) {
-    db.insert(data.quality, data.pm2_5, data.pm10);
+sensor.on('data', function (airQuality) {
+    db.insert(airQuality);
 });
-db.insert(models_1.AirQualityState.GOOD, 2, 3);
-sensor.generateData();
+// db.insert({ quality: AirQualityState.GOOD, pm2_5: 1, pm10: 1 });
+// sensor.generateData();
 var root = {
     airQuality: {
         quality: function () {

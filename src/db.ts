@@ -10,6 +10,12 @@ const createSql = `CREATE TABLE IF NOT EXISTS airquality (
   quality TEXT, 
   pm2_5 INTEGER, 
   pm10 INTEGER, 
+  pc0_3 INTEGER,
+  pc0_5 INTEGER,
+  pc1_0 INTEGER,
+  pc2_5 INTEGER,          
+  pc5_0 INTEGER,
+  pc10 INTEGER,
   created_at integer(4) not null default (strftime('%s','now')) 
 );`
 
@@ -21,7 +27,9 @@ LIMIT 1;
 `;
 
 const insertSql = `
-INSERT INTO airquality (quality, pm2_5, pm10) values (?, ?, ?); 
+INSERT INTO airquality 
+  (quality, pm2_5, pm10, pc0_3, pc0_5, pc1_0, pc2_5, pc5_0, pc10) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); 
 `;
 
 export class AirQualityDatabase {
@@ -35,9 +43,13 @@ export class AirQualityDatabase {
     });    
   }
 
-  insert(quality: AirQualityState, pm2_5: number, pm10: number) {
+  insert(airquality: AirQuality) {
     this.db.serialize(() => {      
-      this.stmt.run(quality, pm2_5, pm10, function (error: any) {
+      this.stmt.run(
+        airquality.quality, airquality.pm2_5, airquality.pm10,
+        airquality.pc0_3, airquality.pc0_5, airquality.pc1_0,
+        airquality.pc2_5, airquality.pc5_0, airquality.pc10,
+        function (error: any) {
         if (error) {
           console.log(error);
         }

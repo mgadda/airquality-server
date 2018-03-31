@@ -19,11 +19,12 @@ var AirQualitySensor = /** @class */ (function (_super) {
     __extends(AirQualitySensor, _super);
     function AirQualitySensor() {
         var _this = _super.call(this) || this;
-        // Create a port and enable the echo and recording.
+        // Create a mock port and enable the echo and recording.
         var MockBinding = TestSerialPort.Binding;
         MockBinding.createPort('/dev/ROBOT', { echo: true, record: true });
         _this.port = new SerialPort('/dev/ROBOT');
-        // var port = new SerialPort('/dev/tty-usbserial1', {
+        // Replace the above with just:
+        // var port = new SerialPort('/dev/cu.Bluetooth-Incoming-Port', {
         //   baudRate: 9600
         // });
         var parser = new serialport_1.parsers.Readline({ delimiter: "\n", encoding: "utf8" });
@@ -34,6 +35,12 @@ var AirQualitySensor = /** @class */ (function (_super) {
                 _this.emit('data', {
                     pm2_5: raw.pm2_5,
                     pm10: raw.pm10,
+                    pc0_3: raw.pc0_3,
+                    pc0_5: raw.pc0_5,
+                    pc1_0: raw.pc1_0,
+                    pc2_5: raw.pc2_5,
+                    pc5_0: raw.pc5_0,
+                    pc10: raw.pc10,
                     quality: _this.pm2_5ToQuality(raw.pm2_5)
                 });
             }
@@ -92,7 +99,4 @@ var AirQualitySensor = /** @class */ (function (_super) {
     return AirQualitySensor;
 }(events_1.EventEmitter));
 exports.AirQualitySensor = AirQualitySensor;
-// (function wait () {
-//   if (true) setTimeout(wait, 1000);
-// })();
 //# sourceMappingURL=sensor.js.map
