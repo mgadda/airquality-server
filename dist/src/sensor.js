@@ -17,14 +17,14 @@ var models_1 = require("./models");
 // const TestSerialPort = require('serialport/test');
 var AirQualitySensor = /** @class */ (function (_super) {
     __extends(AirQualitySensor, _super);
-    function AirQualitySensor() {
+    function AirQualitySensor(device) {
         var _this = _super.call(this) || this;
         // Create a mock port and enable the echo and recording.
         // const MockBinding = TestSerialPort.Binding;
         // MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
         // this.port = new SerialPort('/dev/ROBOT');
         // Replace the above with just:
-        _this.port = new SerialPort('/dev/cu.usbmodem1421', {
+        _this.port = new SerialPort(device, {
             baudRate: 9600
         });
         var parser = new serialport_1.parsers.Readline({ delimiter: "\r\n", encoding: "utf8" });

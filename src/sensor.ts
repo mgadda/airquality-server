@@ -22,7 +22,7 @@ export class AirQualitySensor extends EventEmitter {
     } else return AirQualityState.UNKNOWN;
   }
 
-  constructor() {
+  constructor(device: string) {
     super();
 
     // Create a mock port and enable the echo and recording.
@@ -32,7 +32,7 @@ export class AirQualitySensor extends EventEmitter {
     // this.port = new SerialPort('/dev/ROBOT');
 
     // Replace the above with just:
-    this.port = new SerialPort('/dev/cu.usbmodem1421', {
+    this.port = new SerialPort(device, {
       baudRate: 9600
     });
 

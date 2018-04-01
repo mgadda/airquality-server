@@ -18,9 +18,10 @@ export class Server {
     verbose: boolean,
     port: number,
     dbPath: string,
-    samplingPeriod: number
+    samplingPeriod: number,
+    device: string,
   ) {
-    this.sensor = new AirQualitySensor();
+    this.sensor = new AirQualitySensor(device);
     this.db = new AirQualityDatabase(dbPath);
     this.verbose = verbose;
     this.samplingPeriod = samplingPeriod;

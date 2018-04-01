@@ -42,8 +42,8 @@ var morgan = require("morgan");
 var db_1 = require("./db");
 var sensor_1 = require("./sensor");
 var Server = /** @class */ (function () {
-    function Server(verbose, port, dbPath, samplingPeriod) {
-        this.sensor = new sensor_1.AirQualitySensor();
+    function Server(verbose, port, dbPath, samplingPeriod, device) {
+        this.sensor = new sensor_1.AirQualitySensor(device);
         this.db = new db_1.AirQualityDatabase(dbPath);
         this.verbose = verbose;
         this.samplingPeriod = samplingPeriod;

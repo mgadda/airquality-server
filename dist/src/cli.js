@@ -6,11 +6,12 @@ var httpPort;
 program
     .name("airquality-server")
     .version("0.1.0")
-    .option("--verbose", "Be more verbose")
-    .option("-p, --port <n>", "port", parseInt)
-    .option("--database-path", "Path to sqlite database", "aq.db")
-    .option("-s, --sampling-period", "Number of minutes between saving samples to disk", function (value) { return parseFloat(value) * 60 * 1000; }, 15.0)
+    .option("-v, --verbose", "Be more verbose")
+    .option("-p, --port <n>", "port", parseInt, 4000)
+    .option("--database-path <s>", "Path to sqlite database", "./aq.db")
+    .option("-s, --sampling-period <n>", "Number of minutes between saving samples to disk", function (value) { return parseFloat(value) * 60 * 1000; }, 15.0)
+    .option("-d, --device <s>", "Serial device to read from", "/dev/cu.usbmodem1421")
     .parse(process.argv);
-var server = new server_1.Server(program.verbose, program.port, program.databasePath, program.samplingPeriod);
+var server = new server_1.Server(program.verbose, program.port, program.databasePath, program.samplingPeriod, program.device);
 server.run();
 //# sourceMappingURL=cli.js.map
