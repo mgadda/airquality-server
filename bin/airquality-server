@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+// Adapted from https://github.com/nfarina/homebridge/blob/master/bin/homebridge
+process.title = 'airquality-sensor';
+
+var path = require('path');
+var fs = require('fs');
+var dist = path.join(path.dirname(fs.realpathSync(__filename)), '../dist/src');
+
+require(dist + '/cli');

@@ -41,75 +41,79 @@ var schema_1 = require("./schema");
 var morgan = require("morgan");
 var db_1 = require("./db");
 var sensor_1 = require("./sensor");
-var sensor = new sensor_1.AirQualitySensor();
-var db = new db_1.AirQualityDatabase("aq.db");
-var lastSample;
-sensor.on('data', function (airQuality) {
-    lastSample = airQuality;
-});
-setInterval(function () {
-    db.insert(lastSample);
-    console.log(lastSample);
-}, 90000); // every 15 minutes
+var Server = /** @class */ (function () {
+    function Server(verbose, port, dbPath, samplingPeriod) {
+        this.sensor = new sensor_1.AirQualitySensor();
+        this.db = new db_1.AirQualityDatabase(dbPath);
+        this.verbose = verbose;
+        this.samplingPeriod = samplingPeriod;
+    }
+    Server.prototype.run = function () {
+        this.sensor.on("data", this._handleSensorData.bind(this));
+        setInterval(this._recordSample.bind(this), this.samplingPeriod);
+        var root = {
+            airQuality: {
+                quality: function () {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var row;
+                        return __generator(this, function (_a) {
+                            row = this._getLatest();
+                            return [2 /*return*/, row.quality];
+                        });
+                    });
+                },
+                particulate2_5: function () {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var row;
+                        return __generator(this, function (_a) {
+                            row = this._getLatest();
+                            return [2 /*return*/, row.pm2_5];
+                        });
+                    });
+                },
+                particulate10: function () {
+                    return __awaiter(this, void 0, void 0, function () {
+                        var row;
+                        return __generator(this, function (_a) {
+                            row = this._getLatest();
+                            return [2 /*return*/, row.pm10];
+                        });
+                    });
+                }
+            }
+        };
+        var app = express();
+        app.use(morgan("dev"));
+        app.use(graphqlHTTP({
+            schema: schema_1["default"],
+            rootValue: root,
+            graphiql: true,
+            pretty: true,
+            formatError: function (error) { return ({
+                message: error.message,
+                locations: error.locations,
+                stack: error.stack ? error.stack.split("\n") : [],
+                path: error.path
+            }); }
+        }));
+        app.listen(4000);
+    };
+    Server.prototype._getLatest = function () {
+        return this.lastSample;
+    };
+    Server.prototype._recordSample = function () {
+        this.db.insert(this.lastSample);
+        if (this.verbose) {
+            console.log(this.lastSample);
+        }
+    };
+    Server.prototype._handleSensorData = function (airQuality) {
+        this.lastSample = airQuality;
+    };
+    return Server;
+}());
+exports.Server = Server;
 // setInterval(db.insert, 900000, lastSample); // every 15 minutes
 // db.insert({ quality: AirQualityState.GOOD, pm2_5: 1, pm10: 1 });
 // sensor.generateData();
-var root = {
-    airQuality: {
-        quality: function () {
-            return __awaiter(this, void 0, void 0, function () {
-                var row;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, db.getLatest()];
-                        case 1:
-                            row = _a.sent();
-                            return [2 /*return*/, row.quality];
-                    }
-                });
-            });
-        },
-        particulate2_5: function () {
-            return __awaiter(this, void 0, void 0, function () {
-                var row;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, db.getLatest()];
-                        case 1:
-                            row = _a.sent();
-                            return [2 /*return*/, row.pm2_5];
-                    }
-                });
-            });
-        },
-        particulate10: function () {
-            return __awaiter(this, void 0, void 0, function () {
-                var row;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, db.getLatest()];
-                        case 1:
-                            row = _a.sent();
-                            return [2 /*return*/, row.pm10];
-                    }
-                });
-            });
-        }
-    }
-};
-var app = express();
-app.use(morgan("dev"));
-app.use(graphqlHTTP({
-    schema: schema_1["default"],
-    rootValue: root,
-    graphiql: true,
-    pretty: true,
-    formatError: function (error) { return ({
-        message: error.message,
-        locations: error.locations,
-        stack: error.stack ? error.stack.split('\n') : [],
-        path: error.path
-    }); }
-}));
-app.listen(4000);
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=server.js.map

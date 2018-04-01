@@ -2,10 +2,11 @@ import { parsers } from "serialport";
 import * as SerialPort from "serialport";
 import { EventEmitter } from "events";
 import { AirQualityState } from "./models";
-const TestSerialPort = require('serialport/test');
+// const TestSerialPort = require('serialport/test');
 
 export class AirQualitySensor extends EventEmitter {
-  port: typeof TestSerialPort // change to SerialPort
+  // port: typeof TestSerialPort // change to SerialPort
+  port: SerialPort
 
   pm2_5ToQuality(pm2_5: number): AirQualityState {
     if (pm2_5 >= 0.0 && pm2_5 < 12.0) {
@@ -25,17 +26,17 @@ export class AirQualitySensor extends EventEmitter {
     super();
 
     // Create a mock port and enable the echo and recording.
-    const MockBinding = TestSerialPort.Binding;
-    MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
+    // const MockBinding = TestSerialPort.Binding;
+    // MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
 
-    this.port = new SerialPort('/dev/ROBOT');
+    // this.port = new SerialPort('/dev/ROBOT');
 
     // Replace the above with just:
-    // var port = new SerialPort('/dev/cu.Bluetooth-Incoming-Port', {
-    //   baudRate: 9600
-    // });
+    this.port = new SerialPort('/dev/cu.usbmodem1421', {
+      baudRate: 9600
+    });
 
-    const parser = new parsers.Readline({delimiter: "\n", encoding: "utf8"});
+    const parser = new parsers.Readline({delimiter: "\r\n", encoding: "utf8"});
     this.port.pipe(parser);
 
     parser.on('data', (data) => {
