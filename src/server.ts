@@ -66,13 +66,16 @@ export class Server {
     app.listen(4000);
   }
 
-  _getLatest() {
+  _getLatest(): AirQuality {
     return this.lastSample;
   }
-  
+
   _recordSample() {
-    this.db.insert(this.lastSample);
-    if (this.verbose) {
+    if (this.lastSample) {
+      this.db.insert(this.lastSample);
+    }
+    
+    if (this.verbose && this.lastSample) {
       console.log(this.lastSample);
     }
   }

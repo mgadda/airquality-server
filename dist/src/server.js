@@ -102,8 +102,10 @@ var Server = /** @class */ (function () {
         return this.lastSample;
     };
     Server.prototype._recordSample = function () {
-        this.db.insert(this.lastSample);
-        if (this.verbose) {
+        if (this.lastSample) {
+            this.db.insert(this.lastSample);
+        }
+        if (this.verbose && this.lastSample) {
             console.log(this.lastSample);
         }
     };
