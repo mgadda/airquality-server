@@ -2,7 +2,7 @@
   "name": "airquality-server",
   "version": "0.1.0",
   "description": "Reads arduino data from serial port and serves that data via GraphQL",
-  "main": "dist/src/server.js",
+  "main": "dist/src/cli.js",
   "author": "Matt Gadda <mgadda@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -18,7 +18,7 @@
     "build": "tsc",
     "build-watch": "tsc --watch",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"tsc --watch\" \"nodemon dist/src/index.js\"",
-    "serve": "node dist/src/server.js",
+    "serve": "node dist/src/cli.js",
     "start": "yarn run serve"
   },
   "devDependencies": {
