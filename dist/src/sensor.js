@@ -14,19 +14,21 @@ var serialport_1 = require("serialport");
 var SerialPort = require("serialport");
 var events_1 = require("events");
 var models_1 = require("./models");
-// const TestSerialPort = require('serialport/test');
+var MockBinding = require("serialport/lib/bindings/mock");
 var AirQualitySensor = /** @class */ (function (_super) {
     __extends(AirQualitySensor, _super);
-    function AirQualitySensor(device) {
+    function AirQualitySensor(device, testMode) {
         var _this = _super.call(this) || this;
-        // Create a mock port and enable the echo and recording.
-        // const MockBinding = TestSerialPort.Binding;
-        // MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
-        // this.port = new SerialPort('/dev/ROBOT');
-        // Replace the above with just:
-        _this.port = new SerialPort(device, {
-            baudRate: 9600
-        });
+        if (testMode) {
+            // Create a mock port and enable the echo and recording.
+            MockBinding.createPort('/dev/ROBOT', { echo: true, record: true });
+            _this.port = new SerialPort('/dev/ROBOT', { binding: MockBinding });
+        }
+        else {
+            _this.port = new SerialPort(device, {
+                baudRate: 9600
+            });
+        }
         var parser = new serialport_1.parsers.Readline({ delimiter: "\r\n", encoding: "utf8" });
         _this.port.pipe(parser);
         parser.on('data', function (data) {
@@ -77,9 +79,9 @@ var AirQualitySensor = /** @class */ (function (_super) {
         var pm10 = 10;
         var up = true;
         // Dummy function to avoid having to attach real hardware
-        this.port.write(JSON.stringify({ pm2_5: pm2_5, pm10: pm10 }) + "\n");
+        this.port.write(JSON.stringify({ pm2_5: pm2_5, pm10: pm10 }) + "\r\n");
         setInterval(function () {
-            _this.port.write(JSON.stringify({ pm2_5: pm2_5, pm10: pm10 }) + "\n");
+            _this.port.write(JSON.stringify({ pm2_5: pm2_5, pm10: pm10 }) + "\r\n");
             if (pm2_5 >= 100) {
                 up = false;
             }

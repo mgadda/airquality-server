@@ -10,6 +10,7 @@ program
   .option("-v, --verbose", "Be more verbose")
   .option("-p, --port <n>", "port", parseInt, 4000)
   .option("--database-path <s>", "Path to sqlite database", "./aq.db")
+  .option("--test-mode", "Generate fake database from fake device /dev/ROBOT")
   .option(
     "-s, --sampling-period <n>", 
     "Number of minutes between saving samples to disk", 
@@ -25,6 +26,7 @@ const server = new Server(
   program.databasePath, 
   program.samplingPeriod,
   program.device,
+  program.testMode,
 );
 
 server.run();

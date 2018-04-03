@@ -13,6 +13,7 @@ export class Server {
   verbose: boolean;
   samplingPeriod: number; // milliseconds
   lastSample: AirQuality;
+  testMode: boolean;
 
   constructor(
     verbose: boolean,
@@ -20,11 +21,17 @@ export class Server {
     dbPath: string,
     samplingPeriod: number,
     device: string,
+    testMode: boolean,
   ) {
-    this.sensor = new AirQualitySensor(device);
+    this.sensor = new AirQualitySensor(device, testMode);
+    if (testMode) {
+      this.sensor.generateData();
+    }
+
     this.db = new AirQualityDatabase(dbPath);
     this.verbose = verbose;
     this.samplingPeriod = samplingPeriod;
+    this.testMode = testMode;
   }
 
   run() {

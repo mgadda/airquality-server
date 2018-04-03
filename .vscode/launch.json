@@ -15,7 +15,13 @@
       "request": "launch",
       "name": "Launch Program",
       "smartStep": true,
-      "program": "${workspaceFolder}/dist/src/index.js",
+      "program": "${workspaceFolder}/dist/src/cli.js",
+      "args": [
+        "-v",
+        "-s", "0.016",
+        "--test-mode",
+        "--database-path", "dev.db",        
+      ],
       "outFiles": ["${workspaceFolder}/**/*.js"]
     }
   ]
