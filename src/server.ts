@@ -38,18 +38,19 @@ export class Server {
     this.sensor.on("data", this._handleSensorData.bind(this));
     setInterval(this._recordSample.bind(this), this.samplingPeriod);
 
+    let that = this;
     const root = {
       airQuality: {
         async quality(): Promise<string> {
-          const row = this._getLatest();
+          const row = that._getLatest();
           return row.quality;
         },
         async particulate2_5() {
-          const row = this._getLatest();
+          const row = that._getLatest();
           return row.pm2_5;
         },
         async particulate10() {
-          const row = this._getLatest();
+          const row = that._getLatest();
           return row.pm10;
         }
       }

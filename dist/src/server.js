@@ -55,13 +55,14 @@ var Server = /** @class */ (function () {
     Server.prototype.run = function () {
         this.sensor.on("data", this._handleSensorData.bind(this));
         setInterval(this._recordSample.bind(this), this.samplingPeriod);
+        var that = this;
         var root = {
             airQuality: {
                 quality: function () {
                     return __awaiter(this, void 0, void 0, function () {
                         var row;
                         return __generator(this, function (_a) {
-                            row = this._getLatest();
+                            row = that._getLatest();
                             return [2 /*return*/, row.quality];
                         });
                     });
@@ -70,7 +71,7 @@ var Server = /** @class */ (function () {
                     return __awaiter(this, void 0, void 0, function () {
                         var row;
                         return __generator(this, function (_a) {
-                            row = this._getLatest();
+                            row = that._getLatest();
                             return [2 /*return*/, row.pm2_5];
                         });
                     });
@@ -79,7 +80,7 @@ var Server = /** @class */ (function () {
                     return __awaiter(this, void 0, void 0, function () {
                         var row;
                         return __generator(this, function (_a) {
-                            row = this._getLatest();
+                            row = that._getLatest();
                             return [2 /*return*/, row.pm10];
                         });
                     });
