@@ -1,4 +1,4 @@
-aq.db
+*.db
 *.un~
 # Created by https://www.gitignore.io/api/node
 
