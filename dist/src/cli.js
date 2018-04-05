@@ -56,6 +56,9 @@ function main() {
                         .option("-d, --device <s>", "Serial device to read from")
                         .option("--config <s>", "Path to json config file")
                         .parse(process.argv);
+                    if (!process.argv.slice(2).length) {
+                        program.help();
+                    }
                     if (!program.config) return [3 /*break*/, 2];
                     return [4 /*yield*/, util_1.promisify(fs_1.readFile)(program.config)];
                 case 1:

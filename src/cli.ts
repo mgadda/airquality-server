@@ -8,7 +8,7 @@ export async function main(): Promise<void> {
 
   program
     .name("airquality-server")
-    .version("0.1.0")
+    .version("0.1.0")    
     .option("-v, --verbose", "Be more verbose", false)
     .option("-p, --port <n>", "port", parseInt, 4000)
     .option("--database-path <s>", "Path to sqlite database", "./aq.db")
@@ -22,6 +22,10 @@ export async function main(): Promise<void> {
     .option("--config <s>", "Path to json config file")
     .parse(process.argv);
 
+  if (!process.argv.slice(2).length) {
+    program.help();
+  }
+  
   let server: Server;
 
   if (program.config) {
