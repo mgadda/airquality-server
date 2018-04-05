@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "build-watch": "tsc --watch",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"tsc --watch\" \"nodemon dist/src/cli.js --config config/dev.json\"",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"blue.bold,green.bold\" \"tsc --watch\" \"nodemon dist/src/cli.js -- --config config/dev.json\"",
     "serve": "node dist/src/cli.js",
     "start": "yarn run serve"
   },
