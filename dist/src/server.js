@@ -57,34 +57,24 @@ var Server = /** @class */ (function () {
         setInterval(this._recordSample.bind(this), this.samplingPeriod);
         var that = this;
         var root = {
-            airQuality: {
-                quality: function () {
-                    return __awaiter(this, void 0, void 0, function () {
-                        var row;
-                        return __generator(this, function (_a) {
-                            row = that._getLatest();
-                            return [2 /*return*/, row.quality];
-                        });
+            airQuality: function () {
+                return __awaiter(this, void 0, void 0, function () {
+                    var row;
+                    return __generator(this, function (_a) {
+                        row = that._getLatest();
+                        return [2 /*return*/, {
+                                quality: row.quality,
+                                particulate2_5: row.pm2_5,
+                                particulate10: row.pm10,
+                                particulateCount0_3: row.pc0_3,
+                                particulateCount0_5: row.pc0_5,
+                                particulateCount1_0: row.pc1_0,
+                                particulateCount2_5: row.pc2_5,
+                                particulateCount5_0: row.pc5_0,
+                                particulateCount10: row.pc10
+                            }];
                     });
-                },
-                particulate2_5: function () {
-                    return __awaiter(this, void 0, void 0, function () {
-                        var row;
-                        return __generator(this, function (_a) {
-                            row = that._getLatest();
-                            return [2 /*return*/, row.pm2_5];
-                        });
-                    });
-                },
-                particulate10: function () {
-                    return __awaiter(this, void 0, void 0, function () {
-                        var row;
-                        return __generator(this, function (_a) {
-                            row = that._getLatest();
-                            return [2 /*return*/, row.pm10];
-                        });
-                    });
-                }
+                });
             }
         };
         var app = express();

@@ -40,19 +40,19 @@ export class Server {
 
     let that = this;
     const root = {
-      airQuality: {
-        async quality(): Promise<string> {
-          const row = that._getLatest();
-          return row.quality;
-        },
-        async particulate2_5() {
-          const row = that._getLatest();
-          return row.pm2_5;
-        },
-        async particulate10() {
-          const row = that._getLatest();
-          return row.pm10;
-        }
+      async airQuality(): Promise<object> {
+        const row = that._getLatest();
+        return {
+          quality: row.quality,
+          particulate2_5: row.pm2_5,
+          particulate10: row.pm10,
+          particulateCount0_3: row.pc0_3,
+          particulateCount0_5: row.pc0_5,
+          particulateCount1_0: row.pc1_0,
+          particulateCount2_5: row.pc2_5,
+          particulateCount5_0: row.pc5_0,
+          particulateCount10: row.pc10,
+        };
       }
     };
 
@@ -83,7 +83,7 @@ export class Server {
     if (this.lastSample) {
       this.db.insert(this.lastSample);
     }
-    
+
     if (this.verbose && this.lastSample) {
       console.log(this.lastSample);
     }
