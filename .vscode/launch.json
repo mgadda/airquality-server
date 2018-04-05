@@ -17,10 +17,8 @@
       "smartStep": true,
       "program": "${workspaceFolder}/dist/src/cli.js",
       "args": [
-        "-v",
-        "-s", "0.016",
-        "--test-mode",
-        "--database-path", "dev.db",        
+        "--config",
+        "${workspaceFolder}/config/dev.json",        
       ],
       "outFiles": ["${workspaceFolder}/**/*.js"]
     }
