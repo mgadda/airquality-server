@@ -15,9 +15,9 @@ export async function main(): Promise<void> {
     .option("--test-mode", "Generate fake database from fake device /dev/ROBOT")
     .option(
       "-s, --sampling-period <n>", 
-      "Number of minutes between saving samples to disk", 
-      (value) => parseFloat(value) * 60 * 1000, 
-      15.0)
+      "Number of milliseconds between saving samples to disk", 
+      (value: string) => parseFloat(value), 
+      900000.0)
     .option("-d, --device <s>", "Serial device to read from")
     .option("--config <s>", "Path to json config file")
     .parse(process.argv);
@@ -42,7 +42,7 @@ export async function main(): Promise<void> {
       config.verbose || false, 
       config.port || 4000, 
       config.databasePath || "./aq.db", 
-      config.samplingPeriod ? config.samplingPeriod * 60 * 1000 : 15.0,
+      config.samplingPeriod || 900000,
       config.device,
       config.testMode || false,
     );
