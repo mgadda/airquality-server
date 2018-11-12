@@ -52,9 +52,8 @@ export class Server {
           particulateCount2_5: row.pc2_5,
           particulateCount5_0: row.pc5_0,
           particulateCount10: row.pc10,
+          created_at: row.created_at
         };
-      }
-    };
       },
       async history({ since }: { since: number }): Promise<Array<object>> {
         // This will probably be slow.

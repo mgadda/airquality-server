@@ -8,6 +8,7 @@ export interface AirQuality {
   pc2_5?: number;
   pc5_0?: number;
   pc10?: number;  
+  created_at: number;
 }
 
 export enum AirQualityState {
