@@ -40,7 +40,7 @@ export class Server {
 
     let that = this;
     const root = {
-      async airQuality(): Promise<object> {
+      async air_quality(): Promise<object> {
         const row = that._getLatest();
         return {
           quality: row.quality,
