@@ -1,6 +1,6 @@
 {
   "name": "airquality-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Reads arduino data from serial port and serves that data via GraphQL",
   "main": "dist/src/cli.js",
   "author": "Matt Gadda <mgadda@gmail.com>",
