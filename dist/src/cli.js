@@ -14,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -52,7 +52,7 @@ function main() {
                         .option("-p, --port <n>", "port", parseInt, 4000)
                         .option("--database-path <s>", "Path to sqlite database", "./aq.db")
                         .option("--test-mode", "Generate fake database from fake device /dev/ROBOT")
-                        .option("-s, --sampling-period <n>", "Number of minutes between saving samples to disk", function (value) { return parseFloat(value) * 60 * 1000; }, 15.0)
+                        .option("-s, --sampling-period <n>", "Number of milliseconds between saving samples to disk", function (value) { return parseFloat(value); }, 900000.0)
                         .option("-d, --device <s>", "Serial device to read from")
                         .option("--config <s>", "Path to json config file")
                         .parse(process.argv);
@@ -70,7 +70,7 @@ function main() {
                     else if (!config.device) {
                         throw new Error("`device` is a required property");
                     }
-                    server = new server_1.Server(config.verbose || false, config.port || 4000, config.databasePath || "./aq.db", config.samplingPeriod ? config.samplingPeriod * 60 * 1000 : 15.0, config.device, config.testMode || false);
+                    server = new server_1.Server(config.verbose || false, config.port || 4000, config.databasePath || "./aq.db", config.samplingPeriod || 900000, config.device, config.testMode || false);
                     return [3 /*break*/, 3];
                 case 2:
                     server = new server_1.Server(program.verbose, program.port, program.databasePath, program.samplingPeriod, program.device, program.testMode);

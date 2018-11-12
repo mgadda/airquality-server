@@ -14,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -37,7 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var sqlite3 = require('sqlite3').verbose();
 var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  pc0_3 INTEGER,\n  pc0_5 INTEGER,\n  pc1_0 INTEGER,\n  pc2_5 INTEGER,          \n  pc5_0 INTEGER,\n  pc10 INTEGER,\n  created_at integer(4) not null default (strftime('%s','now')) \n);";
-var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC\nLIMIT 1;\n";
+// TODO: add index on created_at?
+var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nWHERE created_at >= $since\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;\n";
 var insertSql = "\nINSERT INTO airquality \n  (quality, pm2_5, pm10, pc0_3, pc0_5, pc1_0, pc2_5, pc5_0, pc10) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); \n";
 var AirQualityDatabase = /** @class */ (function () {
     function AirQualityDatabase(filename) {
@@ -62,22 +63,24 @@ var AirQualityDatabase = /** @class */ (function () {
             });
         });
     };
-    AirQualityDatabase.prototype.getLatest = function () {
+    AirQualityDatabase.prototype.getLatest = function (since) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             var selectOp;
+            var _this = this;
             return __generator(this, function (_a) {
+                //return await promisify(this.db.get)(selectSql) as AirQuality;    
+                console.log(since);
                 selectOp = new Promise(function (resolve, reject) {
-                    _this.db.get(selectSql, function (err, row) {
+                    _this.db.all(selectSql, { $since: since }, function (err, rows) {
                         if (err) {
                             reject(err);
                         }
                         else {
-                            if (!row) {
-                                reject(new Error("no rows returned"));
+                            if (!rows) {
+                                reject(new Error("something went wrong fetching airquality"));
                             }
                             else {
-                                resolve(row); // TODO: transform row: any into Row
+                                resolve(rows); // TODO: transform row: any into Row
                             }
                         }
                     });

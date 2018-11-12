@@ -14,8 +14,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     function step(op) {
         if (f) throw new TypeError("Generator is already executing.");
         while (_) try {
-            if (f = 1, y && (t = y[op[0] & 2 ? "return" : op[0] ? "throw" : "next"]) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [0, t.value];
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
             switch (op[0]) {
                 case 0: case 1: t = op; break;
                 case 4: _.label++; return { value: op[1], done: false };
@@ -41,6 +41,7 @@ var schema_1 = require("./schema");
 var morgan = require("morgan");
 var db_1 = require("./db");
 var sensor_1 = require("./sensor");
+var mustacheExpress = require("mustache-express");
 var Server = /** @class */ (function () {
     function Server(verbose, port, dbPath, samplingPeriod, device, testMode) {
         this.sensor = new sensor_1.AirQualitySensor(device, testMode);
@@ -57,7 +58,7 @@ var Server = /** @class */ (function () {
         setInterval(this._recordSample.bind(this), this.samplingPeriod);
         var that = this;
         var root = {
-            airQuality: function () {
+            air_quality: function () {
                 return __awaiter(this, void 0, void 0, function () {
                     var row;
                     return __generator(this, function (_a) {
@@ -71,15 +72,42 @@ var Server = /** @class */ (function () {
                                 particulateCount1_0: row.pc1_0,
                                 particulateCount2_5: row.pc2_5,
                                 particulateCount5_0: row.pc5_0,
-                                particulateCount10: row.pc10
+                                particulateCount10: row.pc10,
+                                created_at: row.created_at
                             }];
+                    });
+                });
+            },
+            history: function (_a) {
+                var since = _a.since;
+                return __awaiter(this, void 0, void 0, function () {
+                    return __generator(this, function (_b) {
+                        // This will probably be slow.
+                        return [2 /*return*/, that.db.getLatest(since).then(function (rows) {
+                                return rows.map(function (row) { return ({
+                                    quality: row.quality,
+                                    particulate2_5: row.pm2_5,
+                                    particulate10: row.pm10,
+                                    particulateCount0_3: row.pc0_3,
+                                    particulateCount0_5: row.pc0_5,
+                                    particulateCount1_0: row.pc1_0,
+                                    particulateCount2_5: row.pc2_5,
+                                    particulateCount5_0: row.pc5_0,
+                                    particulateCount10: row.pc10,
+                                    created_at: row.created_at
+                                }); });
+                            })];
                     });
                 });
             }
         };
         var app = express();
+        app.engine('mustache', mustacheExpress());
+        app.set('view engine', 'mustache');
+        app.set('views', './dist/views');
+        app.use('/js', express.static('./dist/src/client'));
         app.use(morgan("dev"));
-        app.use(graphqlHTTP({
+        app.use('/graphql', graphqlHTTP({
             schema: schema_1["default"],
             rootValue: root,
             graphiql: true,
@@ -91,6 +119,9 @@ var Server = /** @class */ (function () {
                 path: error.path
             }); }
         }));
+        app.get('/histo', function (req, res) {
+            res.render('histo', {});
+        });
         app.listen(4000);
     };
     Server.prototype._getLatest = function () {
