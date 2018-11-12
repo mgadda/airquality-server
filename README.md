@@ -15,7 +15,7 @@ It is designed to work with [mgadda/homebridge-airquality](https://github.com/mg
     -p, --port <n>             port (default: 4000)
     --database-path <s>        Path to sqlite database (default: ./aq.db)
     --test-mode                Generate fake database from fake device /dev/ROBOT
-    -s, --sampling-period <n>  Number of minutes between saving samples to disk (default: 15)
+    -s, --sampling-period <n>  Number of milliseconds between saving samples to disk (default: 900000)
     -d, --device <s>           Serial device to read from
     --config <s>               Path to json config file
     -h, --help                 output usage information
