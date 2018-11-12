@@ -6,6 +6,7 @@ import * as morgan from "morgan";
 import { AirQualityDatabase } from "./db";
 import { AirQualitySensor } from "./sensor";
 import { AirQuality, AirQualityState } from "./models";
+import * as mustacheExpress from "mustache-express";
 
 export class Server {
   sensor: AirQualitySensor;
@@ -73,10 +74,20 @@ export class Server {
             })
           )          
         )
+      }
+    };
 
     const app = express();
+    
+    app.engine('mustache', mustacheExpress());
+    app.set('view engine', 'mustache');
+    app.set('views', './dist/views');
+    
+    app.use('/js', express.static('./dist/src/client'));
+    
     app.use(morgan("dev"));
     app.use(
+      '/graphql',
       graphqlHTTP({
         schema: Schema,
         rootValue: root,
@@ -90,6 +101,9 @@ export class Server {
         })
       })
     );
+    app.get('/histo', (req, res) => {
+      res.render('histo', {});
+    })
     app.listen(4000);
   }
 
