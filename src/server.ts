@@ -55,6 +55,25 @@ export class Server {
         };
       }
     };
+      },
+      async history({ since }: { since: number }): Promise<Array<object>> {
+        // This will probably be slow.
+        return that.db.getLatest(since).then((rows) =>         
+          rows.map((row: AirQuality) => (
+            {
+              quality: row.quality,
+              particulate2_5: row.pm2_5,
+              particulate10: row.pm10,
+              particulateCount0_3: row.pc0_3,
+              particulateCount0_5: row.pc0_5,
+              particulateCount1_0: row.pc1_0,
+              particulateCount2_5: row.pc2_5,
+              particulateCount5_0: row.pc5_0,
+              particulateCount10: row.pc10,
+              created_at: row.created_at
+            })
+          )          
+        )
 
     const app = express();
     app.use(morgan("dev"));

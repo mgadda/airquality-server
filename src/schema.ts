@@ -23,5 +23,6 @@ type AirQuality {
 
 type Query {
   airQuality: AirQuality
+  history(since: Int): [AirQuality]
 }
 `);

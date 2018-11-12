@@ -19,11 +19,12 @@ const createSql = `CREATE TABLE IF NOT EXISTS airquality (
   created_at integer(4) not null default (strftime('%s','now')) 
 );`
 
+// TODO: add index on created_at?
 const selectSql = `
 SELECT aq.* 
 FROM airquality AS aq
-ORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC
-LIMIT 1;
+WHERE created_at >= $since
+ORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;
 `;
 
 const insertSql = `
@@ -57,17 +58,18 @@ export class AirQualityDatabase {
     });
   }
 
-  async getLatest(): Promise<AirQuality> {
+  async getLatest(since: number): Promise<AirQuality[]> {
     //return await promisify(this.db.get)(selectSql) as AirQuality;    
-    const selectOp: Promise<AirQuality> = new Promise((resolve, reject) => {
-      this.db.get(selectSql, (err: Error | null, row: any) => {
+    console.log(since);
+    const selectOp: Promise<AirQuality[]> = new Promise((resolve, reject) => {      
+      this.db.all(selectSql, { $since: since }, (err: Error | null, rows: any[]) => {
         if (err) {
           reject(err);
         } else {
-          if (!row) {
-            reject(new Error("no rows returned"));
+          if (!rows) {
+            reject(new Error("something went wrong fetching airquality"));
           } else {
-            resolve(row); // TODO: transform row: any into Row
+            resolve(rows); // TODO: transform row: any into Row
           }          
         }        
       });
