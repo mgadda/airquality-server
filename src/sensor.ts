@@ -49,7 +49,8 @@ export class AirQualitySensor extends EventEmitter {
           pc2_5: raw.pc2_5,
           pc5_0: raw.pc5_0,
           pc10: raw.pc10,
-          quality: this.pm2_5ToQuality(raw.pm2_5)
+	  quality: this.pm2_5ToQuality(raw.pm2_5),
+	  created_at: Math.trunc(Date.now()/1000)
         });
       } catch {
       }

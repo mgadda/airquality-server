@@ -24,6 +24,6 @@ type AirQuality {
 
 type Query {
   air_quality: AirQuality
-  history(since: Int): [AirQuality]
+  history(since: Int, until: Int): [AirQuality]
 }
 `);

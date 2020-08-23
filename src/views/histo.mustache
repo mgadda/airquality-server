@@ -6,7 +6,7 @@
     <canvas id="myChart" width="400" height="200"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
     <script>    
-      const since = Math.trunc((Date.now() - (2 * 24 * 60 * 60))/1000);
+      const since = Math.trunc((Date.now() - (2 * 24 * 60 * 60)));
       const req = fetch('/graphql', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -24,8 +24,8 @@
 
       const ctx = document.getElementById("myChart").getContext('2d');
       req.then((data) => data.json()).then(({ data: { history }}) => {
-        const pm25Data = history.map((row) => ({ x: row.createdAt * 1000, y: row.particulate2_5 }));
-        const pm10Data = history.map((row) => ({ x: row.createdAt * 1000, y: row.particulate10 }));
+        const pm25Data = history.map((row) => ({ x: row.createdAt, y: row.particulate2_5 }));
+        const pm10Data = history.map((row) => ({ x: row.createdAt, y: row.particulate10 }));
         const myChart = new Chart(ctx, {
           type: 'line',
           data: { datasets: [{
