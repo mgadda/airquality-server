@@ -21,9 +21,20 @@ const createSql = `CREATE TABLE IF NOT EXISTS airquality (
 
 // TODO: add index on created_at?
 const selectSql = `
-SELECT aq.* 
+SELECT 
+  id,
+  quality,
+  pm2_5,
+  pm10,
+  pc0_3,
+  pc0_5,
+  pc1_0,
+  pc2_5,
+  pc5_0,
+  pc10,
+  aq.created_at * 1000 as created_at //, datetime(created_at, 'unixepoch') as created_at2
 FROM airquality AS aq
-WHERE created_at >= $since
+WHERE created_at >= $since and created_at < $until
 ORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;
 `;
 
@@ -58,11 +69,14 @@ export class AirQualityDatabase {
     });
   }
 
-  async getLatest(since: number): Promise<AirQuality[]> {
+  async getLatest(since: number, until: number): Promise<AirQuality[]> {
+	  if (until < 0 || since < 0) {
+	  throw "Invalid start or end time";
+	  }
     //return await promisify(this.db.get)(selectSql) as AirQuality;    
-    console.log(since);
+    console.log(since, until);
     const selectOp: Promise<AirQuality[]> = new Promise((resolve, reject) => {      
-      this.db.all(selectSql, { $since: since }, (err: Error | null, rows: any[]) => {
+      this.db.all(selectSql, { $since: since, $until: until }, (err: Error | null, rows: any[]) => {
         if (err) {
           reject(err);
         } else {
