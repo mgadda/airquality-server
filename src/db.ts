@@ -32,9 +32,9 @@ SELECT
   pc2_5,
   pc5_0,
   pc10,
-  aq.created_at * 1000 as created_at //, datetime(created_at, 'unixepoch') as created_at2
+  aq.created_at * 1000 as created_at --, datetime(created_at, 'unixepoch') as created_at2
 FROM airquality AS aq
-WHERE created_at >= $since and created_at < $until
+WHERE created_at >= ($since/1000) and created_at < ($until/1000)
 ORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;
 `;
 
