@@ -48,7 +48,7 @@ var AirQualitySensor = /** @class */ (function (_super) {
                     pc5_0: raw.pc5_0,
                     pc10: raw.pc10,
                     quality: _this.pm2_5ToQuality(raw.pm2_5),
-                    created_at: Math.trunc(Date.now() / 1000)
+                    created_at: new Date().toISOString()
                 });
             }
             catch (_a) {
