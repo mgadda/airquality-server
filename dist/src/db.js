@@ -40,7 +40,7 @@ exports.AirQualityDatabase = void 0;
 var sqlite3 = require('sqlite3').verbose();
 var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  pc0_3 INTEGER,\n  pc0_5 INTEGER,\n  pc1_0 INTEGER,\n  pc2_5 INTEGER,          \n  pc5_0 INTEGER,\n  pc10 INTEGER,\n  created_at integer(4) not null default (strftime('%s','now')) \n);";
 // TODO: add index on created_at?
-var selectSql = "\nSELECT \n  id,\n  quality,\n  pm2_5,\n  pm10,\n  pc0_3,\n  pc0_5,\n  pc1_0,\n  pc2_5,\n  pc5_0,\n  pc10,\n  aq.created_at * 1000 as created_at --, datetime(created_at, 'unixepoch') as created_at2\nFROM airquality AS aq\nWHERE created_at >= ($since/1000) and created_at < ($until/1000)\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;\n";
+var selectSql = "\nSELECT \n  id,\n  quality,\n  pm2_5,\n  pm10,\n  pc0_3,\n  pc0_5,\n  pc1_0,\n  pc2_5,\n  pc5_0,\n  pc10,\n  datetime(created_at, 'unixepoch') as created_at\nFROM airquality AS aq\nWHERE created_at >= strftime('%s', $since) and created_at < strftime('%s', $until)\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;\n";
 var insertSql = "\nINSERT INTO airquality \n  (quality, pm2_5, pm10, pc0_3, pc0_5, pc1_0, pc2_5, pc5_0, pc10) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); \n";
 var AirQualityDatabase = /** @class */ (function () {
     function AirQualityDatabase(filename) {
