@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -35,15 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.AirQualityDatabase = void 0;
 var sqlite3 = require('sqlite3').verbose();
 var createSql = "CREATE TABLE IF NOT EXISTS airquality ( \n  id INTEGER PRIMARY KEY AUTOINCREMENT, \n  quality TEXT, \n  pm2_5 INTEGER, \n  pm10 INTEGER, \n  pc0_3 INTEGER,\n  pc0_5 INTEGER,\n  pc1_0 INTEGER,\n  pc2_5 INTEGER,          \n  pc5_0 INTEGER,\n  pc10 INTEGER,\n  created_at integer(4) not null default (strftime('%s','now')) \n);";
 // TODO: add index on created_at?
-var selectSql = "\nSELECT aq.* \nFROM airquality AS aq\nWHERE created_at >= $since\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;\n";
+var selectSql = "\nSELECT \n  id,\n  quality,\n  pm2_5,\n  pm10,\n  pc0_3,\n  pc0_5,\n  pc1_0,\n  pc2_5,\n  pc5_0,\n  pc10,\n  aq.created_at * 1000 as created_at --, datetime(created_at, 'unixepoch') as created_at2\nFROM airquality AS aq\nWHERE created_at >= ($since/1000) and created_at < ($until/1000)\nORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;\n";
 var insertSql = "\nINSERT INTO airquality \n  (quality, pm2_5, pm10, pc0_3, pc0_5, pc1_0, pc2_5, pc5_0, pc10) \nVALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); \n";
 var AirQualityDatabase = /** @class */ (function () {
     function AirQualityDatabase(filename) {
-        if (filename === void 0) { filename = ':memory:'; }
         var _this = this;
+        if (filename === void 0) { filename = ':memory:'; }
         this.db = new sqlite3.Database(filename);
         this.db.serialize(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -63,15 +65,18 @@ var AirQualityDatabase = /** @class */ (function () {
             });
         });
     };
-    AirQualityDatabase.prototype.getLatest = function (since) {
+    AirQualityDatabase.prototype.getLatest = function (since, until) {
         return __awaiter(this, void 0, void 0, function () {
             var selectOp;
             var _this = this;
             return __generator(this, function (_a) {
+                if (until < 0 || since < 0) {
+                    throw "Invalid start or end time";
+                }
                 //return await promisify(this.db.get)(selectSql) as AirQuality;    
-                console.log(since);
+                console.log(since, until);
                 selectOp = new Promise(function (resolve, reject) {
-                    _this.db.all(selectSql, { $since: since }, function (err, rows) {
+                    _this.db.all(selectSql, { $since: since, $until: until }, function (err, rows) {
                         if (err) {
                             reject(err);
                         }

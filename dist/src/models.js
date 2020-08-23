@@ -1,5 +1,6 @@
 "use strict";
 exports.__esModule = true;
+exports.AirQualityState = void 0;
 var AirQualityState;
 (function (AirQualityState) {
     AirQualityState["UNKNOWN"] = "UNKNOWN";

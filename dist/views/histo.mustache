@@ -6,7 +6,7 @@
     <canvas id="myChart" width="400" height="200"></canvas>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
     <script>    
-      const since = Math.trunc((Date.now() - (2 * 24 * 60 * 60))/1000);
+      const since = Math.trunc((Date.now() - (2 * 24 * 60 * 60)));
       const req = fetch('/graphql', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
