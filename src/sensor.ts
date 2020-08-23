@@ -6,7 +6,7 @@ const MockBinding = require("serialport/lib/bindings/mock");
 
 export class AirQualitySensor extends EventEmitter {
   port: SerialPort
-  
+
   pm2_5ToQuality(pm2_5: number): AirQualityState {
     if (pm2_5 >= 0.0 && pm2_5 < 12.0) {
       return AirQualityState.EXCELLENT;
@@ -31,7 +31,7 @@ export class AirQualitySensor extends EventEmitter {
     } else {
       this.port = new SerialPort(device, {
         baudRate: 9600
-      });  
+      });
     }
 
     const parser = new parsers.Readline({delimiter: "\r\n", encoding: "utf8"});
@@ -49,8 +49,8 @@ export class AirQualitySensor extends EventEmitter {
           pc2_5: raw.pc2_5,
           pc5_0: raw.pc5_0,
           pc10: raw.pc10,
-	  quality: this.pm2_5ToQuality(raw.pm2_5),
-	  created_at: Math.trunc(Date.now()/1000)
+	        quality: this.pm2_5ToQuality(raw.pm2_5),
+	        created_at: new Date().toISOString()
         });
       } catch {
       }

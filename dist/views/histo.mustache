@@ -24,8 +24,8 @@
 
       const ctx = document.getElementById("myChart").getContext('2d');
       req.then((data) => data.json()).then(({ data: { history }}) => {
-        const pm25Data = history.map((row) => ({ x: row.createdAt * 1000, y: row.particulate2_5 }));
-        const pm10Data = history.map((row) => ({ x: row.createdAt * 1000, y: row.particulate10 }));
+        const pm25Data = history.map((row) => ({ x: row.createdAt, y: row.particulate2_5 }));
+        const pm10Data = history.map((row) => ({ x: row.createdAt, y: row.particulate10 }));
         const myChart = new Chart(ctx, {
           type: 'line',
           data: { datasets: [{
