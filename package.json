@@ -13,8 +13,8 @@
     "morgan": "^1.9.0",
     "mustache": "^3.0.0",
     "mustache-express": "^1.2.8",
-    "serialport": "^6.1.1",
-    "sqlite3": "^4.0.0"
+    "serialport": "^9.0.1",
+    "sqlite3": "^5.0.0"
   },
   "scripts": {
     "copy_assets": "copyfiles -u 2 ./src/**/*.mustache ./dist/views",

@@ -2,7 +2,7 @@ import { parsers } from "serialport";
 import * as SerialPort from "serialport";
 import { EventEmitter } from "events";
 import { AirQualityState } from "./models";
-const MockBinding = require("serialport/lib/bindings/mock");
+import * as MockBinding from "@serialport/binding-mock";
 
 export class AirQualitySensor extends EventEmitter {
   port: SerialPort
