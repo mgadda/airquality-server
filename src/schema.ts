@@ -19,7 +19,8 @@ type AirQuality {
   particulateCount2_5: Int
   particulateCount5_0: Int
   particulateCount10: Int
-  created_at: String 
+  created_at_ms: String
+  created_at_iso: String
 }
 
 type Query {

@@ -58,7 +58,7 @@ export class Server {
       },
       async history({ since, until }: { since: number, until: number }): Promise<Array<object>> {
         // This will probably be slow.
-        return that.db.getLatest(since, until).then((rows) =>         
+        return that.db.getLatest(since, until).then((rows) =>
           rows.map((row: AirQuality) => (
             {
               quality: row.quality,
@@ -70,21 +70,22 @@ export class Server {
               particulateCount2_5: row.pc2_5,
               particulateCount5_0: row.pc5_0,
               particulateCount10: row.pc10,
-              created_at: row.created_at
+              created_at_iso: row.created_at_iso,
+              created_at_ms: row.created_at_ms
             })
-          )          
+          )
         )
       }
     };
 
     const app = express();
-    
+
     app.engine('mustache', mustacheExpress());
     app.set('view engine', 'mustache');
     app.set('views', './dist/views');
-    
+
     app.use('/js', express.static('./dist/src/client'));
-    
+
     app.use(morgan("dev"));
     app.use(
       '/graphql',
