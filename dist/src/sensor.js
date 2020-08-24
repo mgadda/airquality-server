@@ -13,12 +13,11 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
-exports.AirQualitySensor = void 0;
 var serialport_1 = require("serialport");
 var SerialPort = require("serialport");
 var events_1 = require("events");
 var models_1 = require("./models");
-var MockBinding = require("serialport/lib/bindings/mock");
+var MockBinding = require("@serialport/binding-mock");
 var AirQualitySensor = /** @class */ (function (_super) {
     __extends(AirQualitySensor, _super);
     function AirQualitySensor(device, testMode) {
