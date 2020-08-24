@@ -32,7 +32,7 @@ SELECT
   pc5_0,
   pc10,
   created_at * 1000 as created_at_ms,
-  datetime(created_at, 'unixepoch') as created_at_iso
+  datetime(created_at, 'unixepoch', 'localtime') as created_at_iso
 FROM airquality AS aq
 WHERE aq.created_at >= strftime('%s', $since) and aq.created_at < strftime('%s', $until)
 ORDER BY datetime(aq.created_at, 'unixepoch', 'localtime') DESC;
