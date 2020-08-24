@@ -53,7 +53,8 @@ export class Server {
           particulateCount2_5: row.pc2_5,
           particulateCount5_0: row.pc5_0,
           particulateCount10: row.pc10,
-          created_at: row.created_at
+          created_at_iso: row.created_at_iso,
+          created_at_ms: row.created_at_ms
         };
       },
       async history({ since, until }: { since: number, until: number }): Promise<Array<object>> {

@@ -26,7 +26,7 @@ export class AirQualitySensor extends EventEmitter {
 
     if (testMode) {
       // Create a mock port and enable the echo and recording.
-      MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })      
+      MockBinding.createPort('/dev/ROBOT', { echo: true, record: true })
       this.port = new SerialPort('/dev/ROBOT', { binding: MockBinding });
     } else {
       this.port = new SerialPort(device, {
@@ -38,6 +38,7 @@ export class AirQualitySensor extends EventEmitter {
     this.port.pipe(parser);
 
     parser.on('data', (data) => {
+      const date = new Date();
       try {
         const raw = JSON.parse(data.toString());
         this.emit('data', {
@@ -50,7 +51,8 @@ export class AirQualitySensor extends EventEmitter {
           pc5_0: raw.pc5_0,
           pc10: raw.pc10,
 	        quality: this.pm2_5ToQuality(raw.pm2_5),
-	        created_at: new Date().toISOString()
+          created_at_iso: date.toISOString(),
+          created_at_ms: date.getTime()
         });
       } catch {
       }
