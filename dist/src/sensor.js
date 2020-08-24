@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 exports.__esModule = true;
+exports.AirQualitySensor = void 0;
 var serialport_1 = require("serialport");
 var SerialPort = require("serialport");
 var events_1 = require("events");
@@ -35,7 +36,6 @@ var AirQualitySensor = /** @class */ (function (_super) {
         var parser = new serialport_1.parsers.Readline({ delimiter: "\r\n", encoding: "utf8" });
         _this.port.pipe(parser);
         parser.on('data', function (data) {
-            var date = new Date();
             try {
                 var raw = JSON.parse(data.toString());
                 _this.emit('data', {
@@ -48,8 +48,7 @@ var AirQualitySensor = /** @class */ (function (_super) {
                     pc5_0: raw.pc5_0,
                     pc10: raw.pc10,
                     quality: _this.pm2_5ToQuality(raw.pm2_5),
-                    created_at_iso: date.toISOString(),
-                    created_at_ms: date.getTime()
+                    created_at: new Date().toISOString()
                 });
             }
             catch (_a) {
