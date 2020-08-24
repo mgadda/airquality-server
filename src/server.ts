@@ -57,7 +57,7 @@ export class Server {
           created_at_ms: row.created_at_ms
         };
       },
-      async history({ since, until }: { since: number, until: number }): Promise<Array<object>> {
+      async history({ since, until }: { since: string, until: string }): Promise<Array<object>> {
         // This will probably be slow.
         return that.db.getLatest(since, until).then((rows) =>
           rows.map((row: AirQuality) => (

@@ -69,12 +69,12 @@ export class AirQualityDatabase {
     });
   }
 
-  async getLatest(since: number, until: number): Promise<AirQuality[]> {
+  async getLatest(since: string, until: string): Promise<AirQuality[]> {
 	  if (until < 0 || since < 0) {
 	  throw "Invalid start or end time";
 	  }
     //return await promisify(this.db.get)(selectSql) as AirQuality;
-    console.log(since, until);
+    console.log("(", since, ",", until, ")");
     const selectOp: Promise<AirQuality[]> = new Promise((resolve, reject) => {
       this.db.all(selectSql, { $since: since, $until: until }, (err: Error | null, rows: any[]) => {
         if (err) {
@@ -83,7 +83,7 @@ export class AirQualityDatabase {
           if (!rows) {
             reject(new Error("something went wrong fetching airquality"));
           } else {
-            resolve(rows); // TODO: transform row: any into Row
+            resolve(rows);
           }
         }
       });
